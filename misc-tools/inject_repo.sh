@@ -9,7 +9,6 @@ MINIONS=""
 
 while read minion_json; do
   FQDN=$(echo -n "$minion_json" | jq -r '.fqdn')
-  [[ $FQDN =~ admin ]] && continue
   IPV4=$(echo -n "$minion_json" | jq -r 'if (.addresses.publicIpv4 == null) then .addresses.privateIpv4 else .addresses.publicIpv4 end')
   MINIONS="$MINIONS $IPV4"
 done <<< "$(cat $ENVIRONMENT | jq -c '.minions[]')"
