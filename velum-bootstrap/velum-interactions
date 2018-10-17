@@ -13,6 +13,8 @@ RUN_BOOTSTRAP=false
 RUN_DOWNLOAD_KUBECONFIG=false
 RUN_UPDATE_ADMIN=false
 RUN_UPDATE_MINIONS=false
+RUN_MIGRATE_ADMIN=false
+RUN_MIGRATE_MINIONS=false
 RUN_NODE_ADD=false
 RUN_NODE_REMOVE=false
 ENABLE_TILLER=false
@@ -37,6 +39,11 @@ Usage:
 
     -a|--update-admin                Update admin node
     -m|--update-minions              Update masters and workers
+
+  * Migrating a cluster
+
+    --migrate-admin                  Migrate admin node
+    --migrate-minions                Migrate masters and workers
 
   * Manipulating a cluster
 
@@ -99,6 +106,16 @@ while [[ $# > 0 ]] ; do
       ;;
     -m|--update-minions)
       RUN_UPDATE_MINIONS=true
+      HAS_INTERACTION=true
+      HAS_ACTION=true
+      ;;
+    --migrate-admin)
+      RUN_MIGRATE_ADMIN=true
+      HAS_INTERACTION=true
+      HAS_ACTION=true
+      ;;
+    --migrate-minions)
+      RUN_MIGRATE_MINIONS=true
       HAS_INTERACTION=true
       HAS_ACTION=true
       ;;
@@ -167,6 +184,14 @@ interact() {
 
   if [ "$RUN_NODE_REMOVE" = true ]; then
     args="$args spec/**/07-*"
+  fi
+
+  if [ "$RUN_MIGRATE_ADMIN" = true ]; then
+    args="$args spec/**/08-*"
+  fi
+
+  if [ "$RUN_MIGRATE_MINIONS" = true ]; then
+    args="$args spec/**/09-*"
   fi
 
   VERBOSE=true ENABLE_TILLER=${ENABLE_TILLER} ENVIRONMENT=$ENVIRONMENT bundle exec rspec $args
