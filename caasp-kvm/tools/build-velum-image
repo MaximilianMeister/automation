@@ -34,7 +34,7 @@ kubic_velum_development_reference() {
   REGISTRY_URL=$(jq -r ".baseurl.${IMAGE:10}" $REGISTRY_URLS_JSON | sed 's/\/x86_64//g')
   IFS="/" read BASE_URL RELATIVE_PATH <<< "$REGISTRY_URL"
 
-  TAGS_URL="https://$BASE_URL/v2/$RELATIVE_PATH/$IMAGE_DIST/velum-development/tags/list"
+  TAGS_URL="https://$BASE_URL/v2/$RELATIVE_PATH/sles12/velum-development/tags/list"
 
   TAGS=$(curl -s -D response $TAGS_URL | jq -r '.tags')
 
@@ -46,7 +46,7 @@ kubic_velum_development_reference() {
   
   # And getting the first tag
   FIRST_TAG=$(echo $TAGS | jq -r '.[0]')
-  echo $BASE_URL/$RELATIVE_PATH/$IMAGE_DIST/velum-development:${FIRST_TAG}
+  echo $BASE_URL/$RELATIVE_PATH/sles12/velum-development:${FIRST_TAG}
 }
 
 # get distribution
@@ -54,7 +54,7 @@ if [[ $(basename $IMAGE) =~ [Kk]ubic ]]; then
   IMAGE_DIST=kubic
   RUBY_VERSION=ruby2.5
 else
-  IMAGE_DIST=sles12
+  IMAGE_DIST=registry.suse.com/caasp/v4
   RUBY_VERSION=ruby2.1
 fi
 # Image reference
