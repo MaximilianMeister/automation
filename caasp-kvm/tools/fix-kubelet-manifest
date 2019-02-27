@@ -21,10 +21,6 @@ opts_parser = OptionParser.new do |opts|
       options[:kubic] = k
     end
 
-    opts.on("--sle15", "Patch image sources to registry") do |f|
-      options[:sle15] = f
-    end
-
     opts.on("--noinit", "Do not perform initContainer patching") do |n| 
       options[:noinit] = n
     end
@@ -118,17 +114,9 @@ manifest["spec"]["volumes"] << {
   "hostPath" => {"path" => "/var/lib/misc/velum-dev" },
 }
 
-# in the devsetup we are overwriting again the kubic changes during build time
-# so again replace sles12 image path with kubic
-if options[:kubic]
-  manifest = YAML.load(YAML.dump(manifest).gsub!("sles12", "kubic"))
-end
-
-if options[:sle15]
-  manifest = YAML.safe_load(YAML.dump(manifest))
-  image_versions.each do |k, v|
-    manifest = YAML.safe_load(YAML.dump(manifest).gsub("#{k}:__TAG__", "#{k}:#{v}"))
-  end
+manifest = YAML.safe_load(YAML.dump(manifest))
+image_versions.each do |k, v|
+  manifest = YAML.safe_load(YAML.dump(manifest).gsub("#{k}:__TAG__", "#{k}:#{v}"))
 end
 
 if options[:out]

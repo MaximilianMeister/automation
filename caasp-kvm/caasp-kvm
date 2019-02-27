@@ -351,7 +351,7 @@ build() {
     log "Patching Container Manifests"
     $DIR/tools/fix-kubelet-manifest -o $injected/manifests/public.yaml $injected/manifests/public.yaml
 
-    log "Patching additional manifests and activate.sh to use registry images"
+    log "Patching additional manifests to use registry images"
     $DIR/tools/fix-kubelet-manifest --noinit -o $injected/manifests/private.yaml $injected/manifests/private.yaml
     $DIR/tools/fix-kubelet-manifest --noinit -o $injected/manifests/haproxy.yaml $injected/manifests/haproxy.yaml
   else
